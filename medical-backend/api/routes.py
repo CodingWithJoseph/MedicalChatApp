@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Request
 from fastapi.responses import StreamingResponse
-
-from api.main import app
+from main import app
 from core.retrieve import (
     dense_retrieve,
     hybrid_retrieve,
