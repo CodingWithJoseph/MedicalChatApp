@@ -12,12 +12,12 @@ router = APIRouter()
 
 
 def get_retrieval_results(question, approach, request):
-    index = request.app.state.idx
-    chunks = request.app.state.cs
-    chunk_to_abstract = request.app.state.cta
-    abstracts = request.app.state.abst
-    bm25 = request.app.state.b25
-    metadata = request.app.state.mdata
+    index = request.app.state.index
+    chunks = request.app.state.chunks
+    chunk_to_abstract = request.app.state.chunk_to_abstract
+    abstracts = request.app.state.abstracts
+    bm25 = request.app.state.bm25
+    metadata = request.app.state.metadata
     query_tokenizer = request.app.state.query_tokenizer
     query_model = request.app.state.query_model
 
