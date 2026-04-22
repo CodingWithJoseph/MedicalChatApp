@@ -5,8 +5,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from sentence_transformers import CrossEncoder
 from core.retrieve import load_cache, load_query_encoder
 from api.routes import router
-
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     print('Loading cache...')
@@ -35,6 +33,10 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 origins = os.getenv('CORS_ORIGINS', 'http://localhost:5173').split(',')
+
+@app.get('/health')
+async def health():
+    return {'status': 'ok'}
 
 app.add_middleware(
     CORSMiddleware,

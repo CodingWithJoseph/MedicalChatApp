@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Request
 from fastapi.responses import StreamingResponse
-from main import app
 from core.retrieve import (
     dense_retrieve,
     hybrid_retrieve,
@@ -41,11 +40,6 @@ def get_retrieval_results(question, approach, request):
         )
     else:
         raise ValueError(f'Unknown approach: {approach}')
-
-
-@app.get('/health')
-async def health():
-    return {'status': 'ok'}
 
 
 @router.post('/chat')
