@@ -33,7 +33,7 @@ export const useConversation = () => {
         setError(null)
 
         try {
-            const res = await fetch("http://localhost:8000/chat", {
+            const res = await fetch(`https://medicalchatapp-production.up.railway.app/chat`, {
                 method: "POST",
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
