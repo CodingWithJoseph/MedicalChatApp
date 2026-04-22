@@ -1,0 +1,12 @@
+faiss-cpu
+datasets
+rank-bm25
+transformers
+torch
+nltk
+numpy
+together
+python-dotenv
+fastapi
+uvicorn
+sentence-transformers
