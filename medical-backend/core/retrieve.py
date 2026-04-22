@@ -186,3 +186,38 @@ def rerank_retrieve(question, index, chunks, chunk_to_abstract, abstracts,
         })
 
     return results
+
+
+def hierarchical_retrieve(question, index, chunk_to_abstract, abstracts,
+                          metadata, query_tokenizer, query_model,
+                          k=5, pool_size=50):
+
+    gt_abstract_idx = get_gt_index(question, metadata)
+    query_vec = encode_query(question, query_tokenizer, query_model)
+
+    scores, chunk_indices = index.search(query_vec, pool_size * 3)
+    chunk_indices = chunk_indices[0]
+    scores = scores[0]
+
+    # aggregate chunk scores per parent abstract using max
+    abstract_scores = {}
+    for chunk_idx, score in zip(chunk_indices, scores):
+        abstract_idx = chunk_to_abstract[chunk_idx]
+        if abstract_idx not in abstract_scores:
+            abstract_scores[abstract_idx] = score
+        else:
+            abstract_scores[abstract_idx] = max(abstract_scores[abstract_idx], score)
+
+    ranked = sorted(abstract_scores.items(), key=lambda x: x[1], reverse=True)
+
+    results = []
+    for rank, (abstract_idx, score) in enumerate(ranked[:k]):
+        results.append({
+            'rank': rank + 1,
+            'abstract_idx': abstract_idx,
+            'text': abstracts[abstract_idx],
+            'is_ground_truth': abstract_idx == gt_abstract_idx,
+            'score': round(float(score), 4),
+        })
+
+    return results

@@ -26,7 +26,7 @@ export const useConversation = () => {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
 
-    const sendMessage = async (content: string) => {
+    const sendMessage = async (content: string, approach: string = 'hierarchical') => {
         const userMessage: Message = {role: "user", content}
         setMessages(prev => [...prev, userMessage, {role: "assistant", content: "", metadata: undefined}])
         setLoading(true)
@@ -38,7 +38,7 @@ export const useConversation = () => {
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
                     question: content,
-                    approach: "dense"
+                    approach: approach
                 })
             })
 

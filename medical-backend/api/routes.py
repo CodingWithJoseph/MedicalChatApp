@@ -4,6 +4,7 @@ from core.retrieve import (
     dense_retrieve,
     hybrid_retrieve,
     rerank_retrieve,
+    hierarchical_retrieve,
 )
 from core.llm import stream
 from api.schemas import ChatRequest
@@ -21,12 +22,7 @@ def get_retrieval_results(question, approach, request):
     query_tokenizer = request.app.state.query_tokenizer
     query_model = request.app.state.query_model
 
-    if approach == 'dense':
-        return dense_retrieve(
-            question, index, chunk_to_abstract, abstracts,
-            metadata, query_tokenizer, query_model
-        )
-    elif approach == 'hybrid':
+    if approach == 'hybrid':
         return hybrid_retrieve(
             question, index, chunks, chunk_to_abstract, abstracts,
             bm25, metadata, query_tokenizer, query_model
@@ -38,8 +34,16 @@ def get_retrieval_results(question, approach, request):
             request.app.state.reranker_tokenizer,
             request.app.state.reranker_model
         )
+    elif approach == 'hierarchical':
+        return hierarchical_retrieve(
+            question, index, chunk_to_abstract, abstracts,
+            metadata, query_tokenizer, query_model
+        )
     else:
-        raise ValueError(f'Unknown approach: {approach}')
+        return dense_retrieve(
+            question, index, chunk_to_abstract, abstracts,
+            metadata, query_tokenizer, query_model
+        )
 
 
 @router.post('/chat')
