@@ -28,7 +28,7 @@ export const useConversation = () => {
 
     const sendMessage = async (content: string) => {
         const userMessage: Message = {role: "user", content}
-        setMessages(prev => [...prev, userMessage])
+        setMessages(prev => [...prev, userMessage, {role: "assistant", content: "", metadata: undefined}])
         setLoading(true)
         setError(null)
 
@@ -44,8 +44,6 @@ export const useConversation = () => {
 
             const reader = res.body!.getReader()
             const decoder = new TextDecoder()
-
-            setMessages(prev => [...prev, {role: "assistant", content: "", metadata: undefined}])
 
             let metadataParsed = false
             let buffer = ""
