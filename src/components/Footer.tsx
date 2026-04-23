@@ -21,7 +21,13 @@ const Footer = () => {
             </div>
             <div className="flex justify-center gap-4">
                 <span><span className="text-gray-500">Team Lead</span> <span className="text-gray-600">Kenia Sanchez-Macario</span></span>
-                <span><span className="text-gray-500">Advisor</span> <span className="text-gray-600">Yuqing Zhu</span></span>
+                <span>
+                    <span className="text-gray-500">Advisor </span>
+                    <a href="https://sites.google.com/view/yuqingzhu/" target="_blank" rel="noopener noreferrer"
+                       className="text-[#0070BB] hover:text-blue-300 transition-colors">
+                        Dr. Yuqing Zhu (CSULA)
+                    </a>
+                </span>
                 <span><span className="text-gray-500">Liaison</span> <span className="text-gray-600">TBD</span></span>
                 <span><span className="text-gray-500">Course</span> <span className="text-gray-600">Senior Design · Cal State LA</span></span>
             </div>

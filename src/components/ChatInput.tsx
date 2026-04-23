@@ -1,4 +1,6 @@
 import {useState, useRef, useEffect} from "react";
+import { ChevronUp, ChevronDown } from "lucide-react";
+
 
 type Approach = "hierarchical" | "dense" | "hybrid" | "rerank"
 
@@ -46,10 +48,11 @@ const ChatInput = ({onSend, disabled}: ChatInputProps) => {
                     disabled={disabled}
                     className="w-full flex items-center justify-between gap-2 bg-[#2a2a2a] border border-gray-700
                                text-gray-300 text-sm rounded-xl px-4 py-2.5 focus:outline-none
-                               focus:border-blue-500 transition-colors cursor-pointer disabled:opacity-40"
-                >
+                               focus:border-blue-500 transition-colors cursor-pointer disabled:opacity-40">
                     <span>{APPROACH_LABELS[approach]}</span>
-                    <span className="text-gray-500 text-xs">{open ? "▲" : "▼"}</span>
+                    <span className="text-gray-500">
+                        {open ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                    </span>
                 </button>
 
                 {open && (

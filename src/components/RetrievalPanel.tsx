@@ -20,8 +20,8 @@ const RetrievalPanel = ({metadata}: RetrievalPanelProps) => {
                 </span>
                 <span>·</span>
                 {metadata.ground_truth_in_pool
-                    ? <span className="text-green-400">Ground truth found at rank #{metadata.ground_truth_rank}</span>
-                    : <span className="text-red-400">Ground truth not in pool</span>
+                    ? <span className="text-[#246BCE]">Ground truth found at rank #{metadata.ground_truth_rank}</span>
+                    : <span className="text-[#E25822]">Ground truth not in pool</span>
                 }
             </div>
 
