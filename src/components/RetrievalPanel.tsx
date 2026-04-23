@@ -31,7 +31,7 @@ const RetrievalPanel = ({metadata}: RetrievalPanelProps) => {
                         key={ctx.rank}
                         className={`flex gap-2 p-2 rounded-lg ${
                             ctx.is_ground_truth
-                                ? "bg-green-950 border border-green-800"
+                                ? "bg-[#0a1a2e] border border-[#246BCE]/40"
                                 : "bg-[#1a1a1a]"
                         }`}
                     >

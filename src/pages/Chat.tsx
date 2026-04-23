@@ -9,13 +9,13 @@ import {  Copy, Check, Info } from "lucide-react";
 const SAMPLE_QUESTIONS = [
     {
         label: "yes",
-        exact: "Does metformin reduce all-cause mortality in type 2 diabetes?",
-        natural: "Does metformin help people with diabetes live longer?",
+        exact: "Do mitochondria play a role in remodelling lace plant leaves during programmed cell death?",
+        natural: "Do mitochondria help shape how lace plant leaves break down as they die?",
     },
     {
         label: "no",
-        exact: "Is routine PSA screening associated with reduced prostate cancer mortality?",
-        natural: "Does PSA screening save lives from prostate cancer?",
+        exact: "Do mutations causing low HDL-C promote increased carotid intima-media thickness?",
+        natural: "Do genetic mutations that lower good cholesterol lead to thicker artery walls?",
     },
     {
         label: "maybe",
@@ -90,8 +90,10 @@ const Chat = () => {
     const infoRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, [messages]);
+        setTimeout(() => {
+            bottomRef.current?.scrollIntoView({ behavior: "smooth" })
+        }, 100)
+    }, [messages, loading])
 
     useEffect(() => {
         const handler = (e: MouseEvent) => {
