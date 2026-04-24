@@ -45,7 +45,6 @@ export const useConversation = () => {
             const reader = res.body!.getReader()
             const decoder = new TextDecoder()
 
-            let metadataParsed = false
             let buffer = ""
 
             while (true) {
@@ -53,43 +52,32 @@ export const useConversation = () => {
                 if (done) break
 
                 buffer += decoder.decode(value, {stream: true})
+                const newlineIdx = buffer.indexOf("\n")
 
-                if (!metadataParsed) {
-                    const newlineIdx = buffer.indexOf("\n")
-                    if (newlineIdx !== -1) {
-                        const metadataChunk = buffer.slice(0, newlineIdx)
-                        buffer = buffer.slice(newlineIdx + 1)
-                        metadataParsed = true
+                if (newlineIdx !== -1) {
+                    const line = buffer.slice(0, newlineIdx)
+                    buffer = buffer.slice(newlineIdx + 1)
 
-                        try {
-                            const metadata: RagMetadata = JSON.parse(metadataChunk)
-                            console.log("metadata parsed", metadata)
+                    try {
+                        const parsed = JSON.parse(line)
+                        if (parsed.type === 'rag_metadata') {
                             setMessages(prev => {
                                 const updated = [...prev]
-                                updated[updated.length - 1].metadata = metadata
+                                updated[updated.length - 1].metadata = parsed
                                 return updated
                             })
-                        } catch {
-                            const token = metadataChunk
-                            setMessages(prev => {
-                                const updated = [...prev]
-                                const last = updated[updated.length - 1]
-                                updated[updated.length - 1] = {...last, content: last.content + token}
-                                return updated
-                            })
+                            continue
                         }
-
-                        if (buffer) {
-                            const token = buffer
-                            buffer = ""
-                            setMessages(prev => {
-                                const updated = [...prev]
-                                const last = updated[updated.length - 1]
-                                updated[updated.length - 1] = {...last, content: last.content + token}
-                                return updated
-                            })
-                        }
+                    } catch {
+                        // not JSON, fall through to text
                     }
+
+                    setMessages(prev => {
+                        const updated = [...prev]
+                        const last = updated[updated.length - 1]
+                        updated[updated.length - 1] = {...last, content: last.content + line}
+                        return updated
+                    })
                 } else {
                     const token = buffer
                     buffer = ""
