@@ -219,7 +219,7 @@ const Chat = () => {
                                     message.role === "user" ? "bg-black text-white" : "text-gray-100"
                                 }`}>
                                     {message.content}
-                                    {message.role === "assistant" && message.metadata && !loading && (
+                                    {message.metadata && (
                                         <RetrievalPanel metadata={message.metadata} />
                                     )}
                                 </div>
