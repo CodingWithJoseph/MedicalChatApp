@@ -6,6 +6,10 @@
     --color-border: #4A4A4A;
 }
 
+body {
+    font-size: 1rem; /* base size */
+}
+
 * {
     scrollbar-width: none;
 }

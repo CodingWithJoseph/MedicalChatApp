@@ -13,7 +13,7 @@ async_client = AsyncTogether(api_key=TOGETHER_API_KEY)
 SYSTEM_PROMPT = """You are a biomedical expert. Read the question and retrieved contexts carefully.
 
 Based on the evidence provided, answer the question. Structure your response as:
-- Start with yes, no, or maybe
+- Start with yes, no, or maybe followed by a period on its own line
 - Follow with a clear explanation citing the evidence
 - Be concise and precise
 
