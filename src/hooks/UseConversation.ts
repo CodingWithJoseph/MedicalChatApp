@@ -50,7 +50,6 @@ export const useConversation = () => {
             while (true) {
                 const {done, value} = await reader.read()
                 if (done) {
-                    console.log("🏁 STREAM DONE - remaining buffer:", JSON.stringify(buffer))
                     if (buffer.trim()) {
                         const jsonStart = buffer.indexOf('{"type": "rag_metadata"')
                         if (jsonStart !== -1) {
@@ -67,16 +66,13 @@ export const useConversation = () => {
                             try {
                                 const parsed = JSON.parse(jsonStr)
                                 if (parsed.type === 'rag_metadata') {
-                                    console.log("✅ METADATA parsed from final buffer")
                                     setMessages(prev => {
                                         const updated = [...prev]
                                         updated[updated.length - 1].metadata = parsed
                                         return updated
                                     })
                                 }
-                            } catch {
-                                console.log("❌ Failed to parse final buffer JSON")
-                            }
+                            } catch {}
                         } else {
                             setMessages(prev => {
                                 const updated = [...prev]
@@ -92,45 +88,49 @@ export const useConversation = () => {
                 buffer += decoder.decode(value, {stream: true})
                 const newlineIdx = buffer.indexOf("\n")
 
-                console.log("CHUNK:", JSON.stringify(buffer))
-                console.log("newlineIdx:", newlineIdx, "buffer length:", buffer.length)
-
                 if (newlineIdx !== -1) {
                     const line = buffer.slice(0, newlineIdx)
                     buffer = buffer.slice(newlineIdx + 1)
 
-                    console.log("LINE:", JSON.stringify(line))
-                    console.log("REMAINING BUFFER AFTER LINE:", JSON.stringify(buffer))
-
                     try {
-                        const parsed = JSON.parse(line)
-                        if (parsed.type === 'rag_metadata') {
-                            console.log("✅ METADATA parsed successfully")
-                            setMessages(prev => {
-                                const updated = [...prev]
-                                updated[updated.length - 1].metadata = parsed
-                                return updated
-                            })
+                        const jsonStart = line.indexOf('{"type": "rag_metadata"')
+                        if (jsonStart !== -1) {
+                            const prefix = line.slice(0, jsonStart)
+                            const jsonStr = line.slice(jsonStart)
+                            if (prefix.trim()) {
+                                setMessages(prev => {
+                                    const updated = [...prev]
+                                    const last = updated[updated.length - 1]
+                                    updated[updated.length - 1] = {...last, content: last.content + prefix}
+                                    return updated
+                                })
+                            }
+                            const parsed = JSON.parse(jsonStr)
+                            if (parsed.type === 'rag_metadata') {
+                                setMessages(prev => {
+                                    const updated = [...prev]
+                                    updated[updated.length - 1].metadata = parsed
+                                    return updated
+                                })
+                            }
                             continue
+                        } else {
+                            const parsed = JSON.parse(line)
+                            if (parsed.type === 'rag_metadata') {
+                                setMessages(prev => {
+                                    const updated = [...prev]
+                                    updated[updated.length - 1].metadata = parsed
+                                    return updated
+                                })
+                                continue
+                            }
                         }
-                    } catch {
-                        console.log("❌ JSON.parse failed, treating as text:", JSON.stringify(line))
-                    }
+                    } catch {}
 
                     setMessages(prev => {
                         const updated = [...prev]
                         const last = updated[updated.length - 1]
                         updated[updated.length - 1] = {...last, content: last.content + line}
-                        return updated
-                    })
-                } else {
-                    console.log("⚠️ NO NEWLINE - flushing as text:", JSON.stringify(buffer))
-                    const token = buffer
-                    buffer = ""
-                    setMessages(prev => {
-                        const updated = [...prev]
-                        const last = updated[updated.length - 1]
-                        updated[updated.length - 1] = {...last, content: last.content + token}
                         return updated
                     })
                 }

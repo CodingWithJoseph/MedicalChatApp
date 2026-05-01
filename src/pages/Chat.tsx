@@ -202,14 +202,6 @@ const Chat = () => {
                         <Menu size={20} />
                     </button>
                     <div className="flex-1" />
-                    {hasMessages && (
-                        <button
-                            onClick={() => setShowInfo(v => !v)}
-                            className="text-gray-300 hover:text-white p-1.5"
-                            aria-label="Show benchmarks">
-                            <Info size={18} />
-                        </button>
-                    )}
                     <button
                         onClick={() => setShowInfo(v => !v)}
                         className={`text-gray-300 hover:text-white p-1.5 ${hasMessages ? "" : "md:hidden"}`}
